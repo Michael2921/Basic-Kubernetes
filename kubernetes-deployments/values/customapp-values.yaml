@@ -1,0 +1,41 @@
+appName: custom-app
+appReplicas: 2
+secretKey: ecr-secret
+appImage: 420392929933.dkr.ecr.us-east-1.amazonaws.com/my-app
+appVersion: "1.0"
+containerPort: 8080
+containerEnvVars:
+  - name: DB_USER
+    keyRef: configMapKeyRef
+    valueFrom:
+      name: customapp-configmap
+      key: DB_USER
+  - name: DB_NAME
+    keyRef: configMapKeyRef
+    valueFrom:
+      name: customapp-configmap
+      key: DB_NAME
+  - name: DB_SERVER
+    keyRef: configMapKeyRef
+    valueFrom:
+      name: customapp-configmap
+      key: DB_SERVER
+  - name: DB_PWD
+    keyRef: secretKeyRef
+    valueFrom:
+      name: mysql-creds
+      key: mysql-password
+
+serviceName: customapp-service
+servicePort: 8080
+serviceType: ClusterIP
+
+ingressName: customapp-ingress
+ingressclassName: nginx
+hostName: 172-238-162-7.ip.linodeusercontent.com
+
+configmapName: customapp-configmap
+data:
+  DB_USER: myuser
+  DB_NAME: mydb
+  DB_SERVER: mysql-primary
